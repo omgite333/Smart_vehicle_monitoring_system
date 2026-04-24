@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(uuid())
+  name          String
+  email         String        @unique
+  password      String
+  vehicleId     String        @unique
+  walletBalance Float         @default(0)
+  vehicles      Vehicle[]
+  transactions  Transaction[]
+  createdAt     DateTime      @default(now())
+}
+
+model Vehicle {
+  id            String   @id @default(uuid())
+  vehicleId     String   @unique
+  vehicleNumber String
+  model         String
+  ownerId       String
+  owner         User     @relation(fields: [ownerId], references: [id])
+  createdAt     DateTime @default(now())
+}
+
+model Location {
+  id        String   @id @default(uuid())
+  vehicleId String
+  latitude  Float
+  longitude Float
+  speed     Float
+  timestamp DateTime @default(now())
+}
+
+model Violation {
+  id         String   @id @default(uuid())
+  vehicleId  String
+  speed      Float
+  speedLimit Float
+  fine       Float
+  latitude   Float
+  longitude  Float
+  mapLink    String
+  status     String   @default("unpaid")
+  rawMessage String?
+  timestamp  DateTime @default(now())
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  amount      Float
+  type        String
+  description String
+  timestamp   DateTime @default(now())
+}
