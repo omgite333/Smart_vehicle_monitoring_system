@@ -11,6 +11,7 @@ export default function RegisterPage() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [focused, setFocused] = useState(null)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -52,35 +53,42 @@ export default function RegisterPage() {
 
   const Field = ({ label, name, type = 'text', placeholder, required = true }) => (
     <div>
-      <label className="block text-sm font-medium text-slate-300 mb-2">{label}</label>
+      <label className="block text-sm font-medium text-slate-400 mb-2.5">{label}</label>
       <input
         type={type}
         className="input"
         placeholder={placeholder}
         value={form[name]}
         onChange={e => setForm({ ...form, [name]: e.target.value })}
+        onFocus={() => setFocused(name)}
+        onBlur={() => setFocused(null)}
         required={required}
       />
     </div>
   )
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 py-8">
-      <div className="w-full max-w-lg">
+    <div className="min-h-screen flex items-center justify-center p-4 py-8 bg-surface-900 bg-dots">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full blur-[150px] opacity-15" style={{ background: 'radial-gradient(circle, #34d399 0%, transparent 70%)' }} />
+        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full blur-[120px] opacity-15" style={{ background: 'radial-gradient(circle, #38bdf8 0%, transparent 70%)' }} />
+      </div>
+
+      <div className="w-full max-w-lg relative z-10">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 bg-accent-500/10 border border-accent-500/20">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 text-accent-400">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-5 bg-gradient-to-br from-accent-500/20 to-accent-500/5 border border-accent-500/30 shadow-glow-accent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-10 h-10 text-accent-400">
               <path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v5" />
               <circle cx="7" cy="17" r="2" />
-              <path d="M9 17h6" />
+              <path d="M9 17h6l2-4H7l-2 4" />
               <circle cx="17" cy="17" r="2" />
             </svg>
           </div>
-          <h1 className="text-2xl font-semibold text-white">Register Vehicle</h1>
-          <p className="text-slate-400 mt-2">Set up your vehicle for monitoring</p>
+          <h1 className="text-3xl font-bold text-white">Register Vehicle</h1>
+          <p className="text-slate-500 mt-2 font-medium">Set up your vehicle for monitoring</p>
         </div>
 
-        <div className="card p-8 shadow-soft-lg">
+        <div className="card p-8 shadow-glow-lg border-surface-700/50">
           {error && (
             <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20">
               <p className="text-sm text-rose-400 flex items-center gap-2">
@@ -95,7 +103,7 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="pb-6 border-b border-slate-700">
+            <div className="pb-6 border-b border-surface-700">
               <p className="text-sm font-medium text-slate-300 mb-4 flex items-center gap-2">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-primary-400">
                   <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
@@ -105,7 +113,7 @@ export default function RegisterPage() {
               </p>
               <div className="space-y-4">
                 <Field label="Full Name" name="name" placeholder="Your full name" />
-                <Field label="Email" name="email" type="email" placeholder="you@example.com" />
+                <Field label="Email Address" name="email" type="email" placeholder="you@example.com" />
                 <div className="grid grid-cols-2 gap-4">
                   <Field label="Password" name="password" type="password" placeholder="Min 8 characters" />
                   <Field label="Confirm Password" name="confirmPassword" type="password" placeholder="Repeat password" />
@@ -130,7 +138,7 @@ export default function RegisterPage() {
 
             <button
               type="submit"
-              className="btn-primary w-full py-3.5 bg-accent-600 hover:bg-accent-500"
+              className="btn-accent w-full py-3.5"
               disabled={loading}
             >
               {loading ? (
@@ -155,10 +163,10 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-700 text-center">
-            <p className="text-sm text-slate-400">
+          <div className="mt-6 pt-6 border-t border-surface-700 text-center">
+            <p className="text-sm text-slate-500">
               Already registered?{' '}
-              <Link href="/login" className="text-primary-400 hover:text-primary-300 font-medium">
+              <Link href="/login" className="text-primary-400 hover:text-primary-300 font-semibold transition-colors">
                 Sign in
               </Link>
             </p>
